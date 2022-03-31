@@ -2,3 +2,4 @@
 *.json
 *.xlsx
 __pycache__/
+jsonfiles/*
