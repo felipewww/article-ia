@@ -4,3 +4,4 @@
 __pycache__/
 jsonfiles/*
 .env
+gcp-key.json
