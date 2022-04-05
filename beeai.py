@@ -15,7 +15,6 @@ class BeeAI:
 
         :param preProcess: PreProcess
         """
-        # self.calcs = []
         self.preProcess = preProcess
 
     def calc(self):
@@ -26,7 +25,6 @@ class BeeAI:
         for row in self.preProcess.usersArticles:
             rowCalc = self.calcWeightsForUser(row)
 
-            # self.printTest(idx, rowCalc)
             idx = idx + 1
 
             self.calcs.append(rowCalc)
@@ -38,15 +36,11 @@ class BeeAI:
         iqr = percentile75 - percentile25
 
         upper_limit = percentile75 + 1.5 * iqr
-        # lower_limit = percentile25 - 1.5 * iqr
 
         self.outliers = self.preProcess.dfDayViews[self.preProcess.dfDayViews['day_views'] > upper_limit]
 
     def calcWeightsForUser(self, userId):
         articles = self.preProcess.usersArticles[userId]
-
-        # ttlLastUpdateInDays = utils.sumIndex("last_update_in_days", articles)
-        # bigger = utils.getBigger("views_last_days", articles)
 
         totalTags = 0
         if userId in self.preProcess.userTags:
@@ -61,11 +55,8 @@ class BeeAI:
             if len(t):
                 isOutlier = 1
 
-            # article = articles[articleIdx]
-            # TODO - salvar estes dados abaixo no mysql
             lastUpdate = article["last_update_in_days"]
             percentTagsRelation = utils.percent(article["tags_related"], totalTags)
-            # percentViewsLastDays = utils.percent(article["views_last_days"], bigger)
             percentViewsLastDays = utils.percent(article["views_last_days"], article["total_views"])
             percentViewsRelationTotalUsersLastDay = utils.percent(article["views_last_days"], article["total_users"])
             percentViewsRelationTotal = utils.percent(article["total_views"], article["total_users"])
@@ -88,9 +79,6 @@ class BeeAI:
             }
             calcs.append(t)
 
-        # sorted_list = sorted(calcs, key=lambda x: x[7], reverse=True)
-
-        # return sorted_list
         return calcs
 
     @staticmethod
@@ -99,9 +87,5 @@ class BeeAI:
             print('\nrowCalc')
             pprint.pprint(rowCalc)
 
-        # print(rowCalc)
-        # if rowCalc[0][0] == '948': # daniel
-        # if rowCalc[0][0] == '23758': # joao
         if rowCalc[0][0] == '24506':  # eu
             print('eu!')
-            # pprint.pprint(rowCalc)

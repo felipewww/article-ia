@@ -1,8 +1,6 @@
 from data import Data
 from pre_process import PreProcess
 from beeai import BeeAI
-
-# import os
 # from dotenv import load_dotenv
 # load_dotenv()
 
@@ -24,6 +22,3 @@ def calc_sponsored(event, context):
     beeAI.calc()
 
     Data.jsonCreator(beeAI.calcs)
-
-
-# hello_pubsub({}, False)
