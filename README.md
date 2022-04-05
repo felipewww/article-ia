@@ -19,3 +19,10 @@ last_update - ultimo update em dias, quanto menor, melhor
 #dependencias
 
 sudo apt-get install python3-pandas
+
+sudo apt-get install python3-mysql.connector
+
+https://cloud.google.com/sql/docs/mysql/connect-functions
+#user o secret manager para env vars 
+
+gcloud functions deploy sponsored-article-fn --region us-east4 --entry-point calc_sponsored --runtime python39 --trigger-topic sponsored-article-topic 

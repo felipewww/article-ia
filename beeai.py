@@ -15,6 +15,7 @@ class BeeAI:
 
         :param preProcess: PreProcess
         """
+        # self.calcs = []
         self.preProcess = preProcess
 
     def calc(self):
@@ -25,28 +26,12 @@ class BeeAI:
         for row in self.preProcess.usersArticles:
             rowCalc = self.calcWeightsForUser(row)
 
-            self.printTest(idx, rowCalc)
+            # self.printTest(idx, rowCalc)
             idx = idx + 1
 
             self.calcs.append(rowCalc)
 
-    @staticmethod
-    def printTest(idx, rowCalc):
-        if idx == 10 or idx == 1000 or idx == 2000 or idx == 3000 or idx == 4000:
-            print('\nrowCalc')
-            pprint.pprint(rowCalc)
-
-        # print(rowCalc)
-        # if rowCalc[0][0] == '948': # daniel
-        # if rowCalc[0][0] == '23758': # joao
-        if rowCalc[0][0] == '24506':  # eu
-            print('eu!')
-            # pprint.pprint(rowCalc)
-
     def calcOutliers(self):
-        # df = pd.DataFrame()
-        # df = pd.read_csv('jsonfiles/pasch/day-views.csv')
-
         self.preProcess.dfDayViews['day_views'] = pd.to_numeric(self.preProcess.dfDayViews['day_views'], errors='coerce').fillna(0).astype(int)
 
         percentile75, percentile25 = np.percentile(self.preProcess.dfDayViews['day_views'], [75, 25])
@@ -70,11 +55,11 @@ class BeeAI:
         calcs = []
         for article in articles:
 
-            isOutlier = False
+            isOutlier = 0
 
             t = self.outliers.loc[self.outliers['help_id'] == article['id'], ['help_id']]
             if len(t):
-                isOutlier = True
+                isOutlier = 1
 
             # article = articles[articleIdx]
             # TODO - salvar estes dados abaixo no mysql
@@ -87,22 +72,36 @@ class BeeAI:
 
             percentLastUpdate = 1 if lastUpdate == 0 else utils.calcInvertedPercent(article["last_update_in_days"])
 
-            t = (
-                article['user_id'],
-                article['id'],
-                # allWeightOne,
-                round(percentTagsRelation, 3),
-                round(percentViewsLastDays, 3),
-                round(percentLastUpdate, 3),
-                round(percentViewsRelationTotalUsersLastDay, 3),
-                round(percentViewsRelationTotal, 3),
-                round(
+            t = {
+                "user_id": article['user_id'],
+                "id": article['id'],
+                "team_id": article['team_id'],
+                "percentTagsRelation": round(percentTagsRelation, 3),
+                "percentLastUpdate": round(percentLastUpdate, 3),
+                "percentViewsLastDays": round(percentViewsLastDays, 3),
+                "percentViewsRelationTotalUsersLastDay": round(percentViewsRelationTotalUsersLastDay, 3),
+                "percentViewsRelationTotal": round(percentViewsRelationTotal, 3),
+                "sum": round(
                     percentTagsRelation + percentViewsLastDays + percentLastUpdate + percentViewsRelationTotalUsersLastDay + percentViewsRelationTotal,
                     3),
-                isOutlier
-            )
+                "isOutlier": isOutlier
+            }
             calcs.append(t)
 
-        sorted_list = sorted(calcs, key=lambda x: x[7], reverse=True)
+        # sorted_list = sorted(calcs, key=lambda x: x[7], reverse=True)
 
-        return sorted_list
+        # return sorted_list
+        return calcs
+
+    @staticmethod
+    def printTest(idx, rowCalc):
+        if idx == 10 or idx == 1000 or idx == 2000 or idx == 3000 or idx == 4000:
+            print('\nrowCalc')
+            pprint.pprint(rowCalc)
+
+        # print(rowCalc)
+        # if rowCalc[0][0] == '948': # daniel
+        # if rowCalc[0][0] == '23758': # joao
+        if rowCalc[0][0] == '24506':  # eu
+            print('eu!')
+            # pprint.pprint(rowCalc)

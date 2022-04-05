@@ -1,0 +1,6 @@
+# Function dependencies, for example:
+# package>=version
+google-cloud-storage
+pandas==1.4.2
+numpy==1.22.3
+mysql.connector

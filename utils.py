@@ -2,6 +2,7 @@ def calcInvertedPercent(num):
     if num == 0:
         return 0
 
+    # todo - tratar caso seja ZERO, igual percent
     ttl = num + 10
     percent = (num * 100) / ttl
     invert = percent - 100
@@ -15,7 +16,6 @@ def calcInvertedPercent(num):
 
 
 def sumIndex(index, arr):
-    # return sum(dic[idx][index] for idx in dic)
     return sum(item[index] for item in arr)
 
 

@@ -3,4 +3,6 @@
 *.xlsx
 __pycache__/
 jsonfiles/*
+jsonfiles/
+gcp-key.json
 .env
