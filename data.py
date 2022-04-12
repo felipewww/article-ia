@@ -34,7 +34,7 @@ class Data:
         return pd.read_csv(blob)
 
     @staticmethod
-    def jsonCreator(beeaiCalcs):
+    def csvCreator(beeaiCalcs):
 
         for userRecomendations in beeaiCalcs:
             teamId = userRecomendations[0]["team_id"]

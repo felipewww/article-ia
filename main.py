@@ -21,4 +21,4 @@ def calc_sponsored(event, context):
     beeAI = BeeAI(processedData)
     beeAI.calc()
 
-    Data.jsonCreator(beeAI.calcs)
+    Data.csvCreator(beeAI.calcs)
