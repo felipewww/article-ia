@@ -1,4 +1,6 @@
 import io
+import os
+
 import pandas as pd
 from google.cloud import storage
 from io import StringIO
@@ -10,15 +12,32 @@ class Data:
 
     @staticmethod
     def userTags():
-        return Data.csvFromStorage('i9/i9_users_tags.csv')
+        return Data.csvFromStorage(Data.filePathByEnv('users_tags'))
 
     @staticmethod
     def userArticlesNotViewed():
-        return Data.csvFromStorage('i9/i9_articles.csv')
+        return Data.csvFromStorage(Data.filePathByEnv('articles'))
 
     @staticmethod
     def dayViews():
-        return Data.csvFromStorage('i9/i9_day_views.csv')
+        return Data.csvFromStorage(Data.filePathByEnv('day_views'))
+
+    @staticmethod
+    def filePathByEnv(key):
+        return {
+            # todo - trocar para pasta PROD (gerada via databricks, confirmar nome...)
+            "prod": {
+                "users_tags": "i9/i9_users_tags.csv",
+                "articles": "i9/i9_articles.csv",
+                "day_views": "i9/i9_day_views.csv"
+            },
+
+            "hml": {
+                "users_tags": "hml/users_tags.csv",
+                "articles": "hml/articles.csv",
+                "day_views": "hml/day_views.csv"
+            },
+        }[os.environ["APP_ENV"]][key]
 
     @staticmethod
     def csvFromStorage(fileName):
@@ -59,7 +78,7 @@ class Data:
                 "isOutlier",
             ]
 
-            fullPath = path+"/"+filname
+            fullPath = os.environ["APP_ENV"]+"/"+path+"/"+filname
 
             s_io = io.StringIO()
 
