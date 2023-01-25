@@ -30,14 +30,14 @@ class BeeAI:
             self.calcs.append(rowCalc)
 
     def calcOutliers(self):
-        self.preProcess.dfDayViews['day_views'] = pd.to_numeric(self.preProcess.dfDayViews['day_views'], errors='coerce').fillna(0).astype(int)
+        self.preProcess.dfDayViews['count'] = pd.to_numeric(self.preProcess.dfDayViews['count'], errors='coerce').fillna(0).astype(int)
 
-        percentile75, percentile25 = np.percentile(self.preProcess.dfDayViews['day_views'], [75, 25])
+        percentile75, percentile25 = np.percentile(self.preProcess.dfDayViews['count'], [75, 25])
         iqr = percentile75 - percentile25
 
         upper_limit = percentile75 + 1.5 * iqr
 
-        self.outliers = self.preProcess.dfDayViews[self.preProcess.dfDayViews['day_views'] > upper_limit]
+        self.outliers = self.preProcess.dfDayViews[self.preProcess.dfDayViews['count'] > upper_limit]
 
     def calcWeightsForUser(self, userId):
         articles = self.preProcess.usersArticles[userId]
@@ -51,14 +51,14 @@ class BeeAI:
 
             isOutlier = 0
 
-            t = self.outliers.loc[self.outliers['help_id'] == article['id'], ['help_id']]
+            t = self.outliers.loc[self.outliers['hv_help_id'] == article['id'], ['hv_help_id']]
             if len(t):
                 isOutlier = 1
 
             lastUpdate = article["last_update_in_days"]
             percentTagsRelation = utils.percent(article["tags_related"], totalTags)
-            percentViewsLastDays = utils.percent(article["views_last_days"], article["total_views"])
-            percentViewsRelationTotalUsersLastDay = utils.percent(article["views_last_days"], article["total_users"])
+            percentViewsLastDays = utils.percent(article["total_views_last_days"], article["total_views"])
+            percentViewsRelationTotalUsersLastDay = utils.percent(article["total_views_last_days"], article["total_users"])
             percentViewsRelationTotal = utils.percent(article["total_views"], article["total_users"])
 
             percentLastUpdate = 1 if lastUpdate == 0 else utils.calcInvertedPercent(article["last_update_in_days"])

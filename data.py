@@ -11,25 +11,27 @@ from datetime import date
 class Data:
 
     @staticmethod
-    def userTags():
-        return Data.csvFromStorage(Data.filePathByEnv('users_tags'))
+    def userTags(teamFilename):
+        return Data.csvFromStorage(teamFilename)
+        # return Data.csvFromStorage(Data.filePathByEnv('users_tags'))
 
     @staticmethod
-    def userArticlesNotViewed():
-        return Data.csvFromStorage(Data.filePathByEnv('articles'))
+    def userArticlesNotViewed(filename):
+        return Data.csvFromStorage(filename)
 
     @staticmethod
-    def dayViews():
-        return Data.csvFromStorage(Data.filePathByEnv('day_views'))
+    def dayViews(teamFilename):
+        return Data.csvFromStorage(teamFilename)
+        # return Data.csvFromStorage(Data.filePathByEnv('day_views'))
 
     @staticmethod
     def filePathByEnv(key):
         return {
             # todo - trocar para pasta PROD (gerada via databricks, confirmar nome...)
             "prod": {
-                "users_tags": "i9/i9_users_tags.csv",
-                "articles": "i9/i9_articles.csv",
-                "day_views": "i9/i9_day_views.csv"
+                "users_tags": "analytics_learning/user_tags/user_tags.csv",
+                "articles": "analytics_learning/users_articles/users_articles.csv",
+                "day_views": "analytics_learning/day_view/day_view.csv"
             },
 
             "hml": {
@@ -40,7 +42,16 @@ class Data:
         }[os.environ["APP_ENV"]][key]
 
     @staticmethod
+    def localCsv(filename):
+        print('reading local!!!!!!!!!!!' + filename)
+        return pd.read_csv('./jsonfiles/hml/' + filename + '.csv')
+
+
+    @staticmethod
     def csvFromStorage(fileName):
+        # if os.environ["APP_ENV"] != 'prod':
+        #     return Data.localCsv(fileName)
+
         storage_client = storage.Client()
         bucket = storage_client.get_bucket('beeai-sponsored-article')
 

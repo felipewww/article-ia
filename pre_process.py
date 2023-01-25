@@ -33,9 +33,9 @@ class PreProcess:
                 "user_id": row["user_id"],
                 "id": row["help_id"],
                 "team_id": row["team_id"],
-                "views_last_days": int(row["views_last_days"]) if row["views_last_days"] else 0,
+                "total_views_last_days": int(row["total_views_last_days"]) if row["total_views_last_days"] else 0,
                 "total_views": int(row["total_views"]) if row["total_views"] else 0,
-                "tags_related": 0 if not row["tags"] else self.tagsRelationsCount(row["tags"], row["user_id"]),
+                "tags_related": 0 if not row["tags_ids"] else self.tagsRelationsCount(row["tags_ids"], row["user_id"]),
                 "last_update_in_days": int(row["last_update_in_days"]) if row["last_update_in_days"] else 0,
                 "total_users": int(row["total_users"]) if row["total_users"] else 0,
             }
@@ -44,7 +44,7 @@ class PreProcess:
 
     def indexUsersTags(self):
         for key, row in self.dfUserTags.iterrows():
-            self.userTags[int(row["id"])] = row["tags"].split("|")
+            self.userTags[int(row["u_id"])] = row["lst_tag_id"].split("|")
 
     def tagsRelationsCount(self, tags, userId):
         if userId not in self.userTags:
@@ -52,7 +52,7 @@ class PreProcess:
 
         count = 0
         userTags = self.userTags[userId]
-        tagsSplit = tags.split("|")
+        tagsSplit = str(tags).split("|")
 
         for tag in tagsSplit:
             if tag in userTags:
