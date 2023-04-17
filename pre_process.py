@@ -47,15 +47,20 @@ class PreProcess:
             self.userTags[int(row["u_id"])] = row["lst_tag_id"].split("|")
 
     def tagsRelationsCount(self, tags, userId):
-        if userId not in self.userTags:
-            return 0
-
         count = 0
-        userTags = self.userTags[userId]
-        tagsSplit = str(tags).split("|")
 
-        for tag in tagsSplit:
-            if tag in userTags:
-                count += 1
+        try:
+            if userId not in self.userTags:
+                return 0
+
+            userTags = self.userTags[userId]
+            tagsSplit = str(tags).split("|")
+
+            for tag in tagsSplit:
+                if tag in userTags:
+                    count += 1
+        except:
+            print("no tags related")
+            print(tags)
 
         return count

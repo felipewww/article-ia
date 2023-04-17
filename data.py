@@ -64,14 +64,14 @@ class Data:
         return pd.read_csv(blob)
 
     @staticmethod
-    def csvCreator(beeaiCalcs):
+    def csvCreator(beeaiCalcs, dbName, teamId):
 
         for userRecomendations in beeaiCalcs:
-            teamId = userRecomendations[0]["team_id"]
-            userId = userRecomendations[0]["user_id"]
+            # teamId = userRecomendations[0]["team_id"]
+            user_id = userRecomendations[0]["user_id"]
 
             path = str(teamId)
-            filname = str(teamId) + '_' + str(userId) + "_" + str(date.today()) + '.csv'
+            filename = str(teamId) + '_' + str(user_id) + "_" + str(date.today()) + '.csv'
 
             storage_client = storage.Client()
             bucket = storage_client.get_bucket('beeai-sponsored-article')
@@ -89,7 +89,10 @@ class Data:
                 "isOutlier",
             ]
 
-            fullPath = os.environ["APP_ENV"]+"/"+path+"/"+filname
+            # full_path = os.environ["APP_ENV"]+"/v2/"+dbName+"/"+path+"/"+filename
+            full_path = "prod/v2/"+dbName+"/"+path+"/"+filename
+
+            print("[CREATING] " + dbName + " " + teamId + " " + full_path)
 
             s_io = io.StringIO()
 
@@ -99,7 +102,7 @@ class Data:
             for recomendation in userRecomendations:
                 wr.writerow(recomendation)
 
-            blob = bucket.blob(fullPath)
+            blob = bucket.blob(full_path)
             blob.upload_from_string(s_io.getvalue())
 
             s_io.close()

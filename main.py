@@ -7,9 +7,6 @@ from data import Data
 from pre_process import PreProcess
 from beeai import BeeAI
 
-# from dotenv import load_dotenv
-# load_dotenv()
-
 from datetime import date
 
 
@@ -29,10 +26,16 @@ def calc_sponsored(event, context):
     ############################################################################
 
     pubsub_message = {
-        "filename": "v2/beedoo/user_articles/2023-01-24/team_id_partition=182/part-00006-tid-2827069645108385745-2046b092-7728-42f2-94d3-2b5840597471-8038-2.c000.csv",
+        "filename": "v2/beedoo/user_articles/2023-01-26/team_id_partition=182/part-00001-tid-8052537269258961540-04d22fa0-b162-4db1-b60b-3dde4ca07eff-11796-4.c000.csv",
         "dbName": "beedoo",
         "teamId": "182"
     }
+
+    # pubsub_message = {
+    #     "filename": "v3/fis/user_articles/2023-01-25/team_id_partition=179/part-00000-tid-1296274642321079991-90819462-1890-401d-9eb7-60f926ee41dd-1675-7.c000.csv",
+    #     "dbName": "fis",
+    #     "teamId": "179"
+    # }
 
     if (os.environ["APP_ENV"] == 'prod'):
         pubsub_message = json.loads(base64.b64decode(event['data']).decode('utf-8'))
@@ -49,7 +52,7 @@ def calc_sponsored(event, context):
     beeAI = BeeAI(processedData)
     beeAI.calc()
 
-    Data.csvCreator(beeAI.calcs)
+    Data.csvCreator(beeAI.calcs, pubsub_message['dbName'], pubsub_message['teamId'])
 
 # if os.environ["APP_ENV"] != 'prod':
 #     from dotenv import load_dotenv
@@ -59,8 +62,13 @@ def calc_sponsored(event, context):
 #         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "sponsored-article-credential.json"
 #         globals()[sys.argv[1]](False, False)
 
-# if __name__ == '__main__':
-#     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "sponsored-article-credential.json"
-#     globals()[sys.argv[1]](
-#         "local", None
-#     )
+if __name__ == '__main__':
+    # import os
+    import sys
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "sponsored-article-credential.json"
+    globals()[sys.argv[1]](
+        "local", None
+    )
