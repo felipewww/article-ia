@@ -52,16 +52,20 @@ class Data:
         # if os.environ["APP_ENV"] != 'prod':
         #     return Data.localCsv(fileName)
 
-        storage_client = storage.Client()
-        bucket = storage_client.get_bucket('beeai-sponsored-article')
+        try:
+            storage_client = storage.Client()
+            bucket = storage_client.get_bucket('beeai-sponsored-article')
 
-        blob = bucket.blob(fileName)
-        blob = blob.download_as_string()
-        blob = blob.decode('utf-8')
+            blob = bucket.blob(fileName)
+            blob = blob.download_as_string()
+            blob = blob.decode('utf-8')
 
-        blob = StringIO(blob)
+            blob = StringIO(blob)
 
-        return pd.read_csv(blob)
+            return pd.read_csv(blob)
+        except:
+            print('[FILE NOT EXISTS] '+fileName)
+            return pd.DataFrame()
 
     @staticmethod
     def csvCreator(beeaiCalcs, dbName, teamId):

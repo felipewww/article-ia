@@ -19,6 +19,7 @@ class PreProcess:
         self.indexArticles()
         self.indexUsersTags()
 
+
     def indexArticles(self):
 
         for key, row in self.dfNotViewed.iterrows():
@@ -43,8 +44,14 @@ class PreProcess:
             self.usersArticles[row["user_id"]].append(articleRow)
 
     def indexUsersTags(self):
+        # todo - se tiver apenas uma tag será um inteiro e o split da crash
         for key, row in self.dfUserTags.iterrows():
-            self.userTags[int(row["u_id"])] = row["lst_tag_id"].split("|")
+            try:
+                self.userTags[int(row["u_id"])] = row["lst_tag_id"].split("|")
+            except AttributeError:
+                self.userTags[int(row["u_id"])] = [str(row["lst_tag_id"])]
+            except:
+                print('something went wrong with lst_tag_id')
 
     def tagsRelationsCount(self, tags, userId):
         count = 0

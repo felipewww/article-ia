@@ -26,9 +26,9 @@ def calc_sponsored(event, context):
     ############################################################################
 
     pubsub_message = {
-        "filename": "v2/beedoo/user_articles/2023-01-26/team_id_partition=182/part-00001-tid-8052537269258961540-04d22fa0-b162-4db1-b60b-3dde4ca07eff-11796-4.c000.csv",
+        "filename": "v2/beedoo/user_articles/2023-04-18/team_id_partition=899/part-00000-tid-5050388441308733642-b6ffc8c9-650a-413e-8098-0d46778601fa-1103-37.c000.csv",
         "dbName": "beedoo",
-        "teamId": "182"
+        "teamId": "899"
     }
 
     # pubsub_message = {
@@ -69,6 +69,5 @@ if __name__ == '__main__':
     load_dotenv()
 
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "sponsored-article-credential.json"
-    globals()[sys.argv[1]](
-        "local", None
-    )
+    calc_sponsored({}, None)
+
